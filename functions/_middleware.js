@@ -25,7 +25,7 @@ export async function onRequest(context) {
         }
 
         // Serving page as is if no config or if config is default
-        if (!configName || configName === 'roofer_config') {
+        if (!configName || configName === 'ACService') {
             return next();
         }
 
@@ -38,9 +38,9 @@ export async function onRequest(context) {
         }
 
         const config = await configResponse.json();
-        const displayName = config.companyName || config.name || "Roofer";
-        const pageTitle = `${displayName} - Roofing Estimate`;
-        const pageDesc = config.description || "Get an accurate roofing estimate in minutes. Interactive and easy to use.";
+        const displayName = config.companyName || config.name || "AC Technician";
+        const pageTitle = `${displayName} - AC Service Estimate`;
+        const pageDesc = config.description || "Get a quick AC service or repair estimate in minutes. Interactive and easy to use.";
 
         const cleanUrl = `${url.protocol}//${url.host}${url.pathname}?config=${configName}`;
         const screenshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(cleanUrl)}?w=1200&h=630`;
