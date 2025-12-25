@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC Service Estimate</title>
+    <meta name="description"
+        content="Get a quick AC service or repair estimate in minutes. Interactive and easy to use.">
+
+    <!-- Open Graph / Social Previews -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/">
+    <meta property="og:title" id="ogTitle" content="AC Service Estimate">
+    <meta property="og:description"
+        content="Get a quick AC service or repair estimate in minutes. Interactive and easy to use.">
+    <meta property="og:image" content="/ac-hero-bg.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="/">
+    <meta property="twitter:title" id="twitterTitle" content="AC Service Estimate">
+    <meta property="twitter:description"
+        content="Get a quick AC service or repair estimate in minutes. Interactive and easy to use.">
+    <meta property="twitter:image" content="/ac-hero-bg.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Libraries -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+
+    <!-- 3D Background Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Hero Section -->
+    <header class="hero" id="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1 class="hero-title">
+                <span class="line">AC Service Estimate</span>
+            </h1>
+            <p class="subtitle">Quick Questions, Quick Quote.</p>
+
+        </div>
+    </header>
+
+    <!-- Calculator Section -->
+    <section id="calculator" class="calculator-section">
+        <div class="container">
+            <div class="calculator-card glass-panel">
+
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressBar"></div>
+                    </div>
+                    <div class="steps-indicator">
+                        <span class="step-dot active">1</span>
+                        <span class="step-dot">2</span>
+                        <span class="step-dot">3</span>
+                        <span class="step-dot">4</span>
+                    </div>
+                </div>
+
+                <form id="roofingForm" onsubmit="return false;">
+
+                    <!-- STEP 1: PROPERTY & LOCATION -->
+                    <div class="wizard-step active" data-step="1">
+                        <div class="step-header">
+                            <span class="step-badge">Section 1 / 3</span>
+                            <h2>📍 Pin your location</h2>
+                            <p>Select your property location on the map.</p>
+                        </div>
+
+                        <!-- Interactive Map -->
+                        <div class="form-group">
+                            <div id="map-container" class="glass-panel">
+                                <div id="map"></div>
+                            </div>
+                        </div>
+
+                        <!-- Property Type -->
+                        <div class="form-group">
+                            <label>🏠 Property type</label>
+                            <div class="shape-grid">
+                                <div class="shape-option" data-value="Apartment" data-group="propertyType">
+                                    <span>Apartment</span>
+                                </div>
+                                <div class="shape-option" data-value="Villa" data-group="propertyType">
+                                    <span>Villa</span>
+                                </div>
+                                <div class="shape-option" data-value="Office" data-group="propertyType">
+                                    <span>Office</span>
+                                </div>
+                                <div class="shape-option" data-value="Shop / Restaurant" data-group="propertyType">
+                                    <span>Shop / Restaurant</span>
+                                </div>
+                                <div class="shape-option" data-value="Warehouse" data-group="propertyType">
+                                    <span>Warehouse</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floor Level -->
+                        <div class="form-group">
+                            <label>🏢 Floor level</label>
+                            <div class="slider-container">
+                                <span id="floorDisplay" class="slider-val-display">Ground floor</span>
+                                <input type="range" id="floorSlider" min="0" max="3" step="1" value="0">
+                                <div class="slider-labels">
+                                    <span>Ground</span>
+                                    <span>10+</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-nav">
+                            <div></div>
+                            <button class="btn btn-primary next-btn">Next Step &rarr;</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: AC DETAILS -->
+                    <div class="wizard-step" data-step="2">
+                        <div class="step-header">
+                            <span class="step-badge">Section 2 / 3</span>
+                            <h2>❄️ AC Details</h2>
+                            <p>Tell us more about your air conditioning unit.</p>
+                        </div>
+
+                        <!-- AC Type -->
+                        <div class="form-group">
+                            <label>❄️ AC type</label>
+                            <div class="shape-grid">
+                                <div class="shape-option" data-value="Split AC" data-group="acType">
+                                    <span>Split AC</span>
+                                </div>
+                                <div class="shape-option" data-value="Central AC" data-group="acType">
+                                    <span>Central AC</span>
+                                </div>
+                                <div class="shape-option" data-value="Window AC" data-group="acType">
+                                    <span>Window AC</span>
+                                </div>
+                                <div class="shape-option" data-value="Cassette / Ducted" data-group="acType">
+                                    <span>Cassette / Ducted</span>
+                                </div>
+                                <div class="shape-option" data-value="Not sure" data-group="acType">
+                                    <span>Not sure</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Number of Units -->
+                        <div class="form-group">
+                            <label>🔢 Number of AC units</label>
+                            <div class="slider-container">
+                                <span id="unitsDisplay" class="slider-val-display">1 unit</span>
+                                <input type="range" id="unitsSlider" min="0" max="3" step="1" value="0">
+                                <div class="slider-labels">
+                                    <span>1</span>
+                                    <span>7+</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Brand -->
+                        <div class="form-group">
+                            <label>🏭 Brand (if known)</label>
+                            <select id="brandSelect" class="form-select glass-panel"
+                                style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; outline: none;">
+                                <option value="Not sure">Not sure / Select a Brand</option>
+                                <option value="Daikin">Daikin</option>
+                                <option value="Mitsubishi">Mitsubishi</option>
+                                <option value="Samsung">Samsung</option>
+                                <option value="LG">LG</option>
+                                <option value="Voltas">Voltas</option>
+                                <option value="Carrier">Carrier</option>
+                                <option value="O'General">O'General</option>
+                                <option value="Blue Star">Blue Star</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="step-nav">
+                            <button class="btn btn-outline prev-btn">&larr; Previous Step</button>
+                            <button class="btn btn-primary next-btn">Next Step &rarr;</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: PROBLEM DIAGNOSIS -->
+                    <div class="wizard-step" data-step="3">
+                        <div class="step-header">
+                            <span class="step-badge">Section 3 / 3</span>
+                            <h2>⚠️ Problem Diagnosis</h2>
+                            <p>What specific issues are you facing?</p>
+                        </div>
+
+                        <!-- Main Issue -->
+                        <div class="form-group">
+                            <label>⚠️ Main issue</label>
+                            <div class="shape-grid">
+                                <div class="shape-option" data-value="Not cooling" data-group="mainIssue">
+                                    <span>Not cooling</span>
+                                </div>
+                                <div class="shape-option" data-value="Weak cooling" data-group="mainIssue">
+                                    <span>Weak cooling</span>
+                                </div>
+                                <div class="shape-option" data-value="Water leakage" data-group="mainIssue">
+                                    <span>Water leakage</span>
+                                </div>
+                                <div class="shape-option" data-value="Bad smell" data-group="mainIssue">
+                                    <span>Bad smell</span>
+                                </div>
+                                <div class="shape-option" data-value="Strange noise" data-group="mainIssue">
+                                    <span>Strange noise</span>
+                                </div>
+                                <div class="shape-option" data-value="AC not turning on" data-group="mainIssue">
+                                    <span>AC not turning on</span>
+                                </div>
+                                <div class="shape-option" data-value="Gas refill needed" data-group="mainIssue">
+                                    <span>Gas refill needed</span>
+                                </div>
+                                <div class="shape-option" data-value="General maintenance" data-group="mainIssue">
+                                    <span>General maintenance</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Issue Duration -->
+                        <div class="form-group">
+                            <label>⏱️ How long has this issue existed?</label>
+                            <div class="slider-container">
+                                <span id="durationDisplay" class="slider-val-display">Today</span>
+                                <input type="range" id="durationSlider" min="0" max="3" step="1" value="0">
+                                <div class="slider-labels">
+                                    <span>Recent</span>
+                                    <span>Long-term</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cooling Condition -->
+                        <div class="form-group">
+                            <label>🌡️ Cooling condition</label>
+                            <div class="shape-grid">
+                                <div class="shape-option" data-value="Completely warm air"
+                                    data-group="coolingCondition">
+                                    <span>Completely warm air</span>
+                                </div>
+                                <div class="shape-option" data-value="Slight cooling" data-group="coolingCondition">
+                                    <span>Slight cooling</span>
+                                </div>
+                                <div class="shape-option" data-value="Cooling but inconsistent"
+                                    data-group="coolingCondition">
+                                    <span>Cooling but inconsistent</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Urgency -->
+                        <div class="form-group">
+                            <label>🚨 Urgency</label>
+                            <div class="shape-grid">
+                                <div class="shape-option" data-value="Emergency (same day)" data-group="urgency">
+                                    <span>Emergency (same day)</span>
+                                </div>
+                                <div class="shape-option" data-value="Today / Tomorrow" data-group="urgency">
+                                    <span>Today / Tomorrow</span>
+                                </div>
+                                <div class="shape-option" data-value="This week" data-group="urgency">
+                                    <span>This week</span>
+                                </div>
+                                <div class="shape-option" data-value="Just checking price" data-group="urgency">
+                                    <span>Just checking price</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-nav">
+                            <button class="btn btn-outline prev-btn">&larr; Previous Step</button>
+                            <button class="btn btn-primary next-btn">Get Estimate &rarr;</button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" data-step="4">
+                        <div class="results-container">
+
+                            <div class="action-buttons vertical-stack">
+                                <a href="#" id="waBtn" class="btn btn-whatsapp full-width" target="_blank">
+                                    <span class="icon">💬</span> Get Estimate via WhatsApp
+                                </a>
+                                <a href="#" id="emailBtn" class="btn btn-email full-width">
+                                    <span class="icon">✉️</span> Get Estimate via Email
+                                </a>
+                                <a href="#" id="smsBtn" class="btn btn-sms full-width">
+                                    <span class="icon">📱</span> Get Estimate via SMS
+                                </a>
+                            </div>
+
+                            <button class="btn-text prev-btn mt-4">Edit Details</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>
