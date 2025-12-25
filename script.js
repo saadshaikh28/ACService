@@ -22,7 +22,6 @@ let state = {
     floorLevel: 'Ground floor',
     acType: '',
     units: '1 unit',
-    brand: 'Not sure',
     mainIssue: '',
     duration: 'Today',
     coolingCondition: '',
@@ -364,13 +363,8 @@ function initEventListeners() {
         });
     }
 
-    // Brand Dropdown
-    const brandSelect = document.getElementById('brandSelect');
-    if (brandSelect) {
-        brandSelect.addEventListener('change', (e) => {
-            state.brand = e.target.value;
-        });
-    }
+    // Brand Dropdown - REMOVED
+
 
     // Duration Slider
     const durationSlider = document.getElementById('durationSlider');
@@ -431,8 +425,8 @@ function validateStep(step) {
         return state.propertyType !== '' && state.location !== null;
     }
     if (step === 2) {
-        // AC Type, Units, Brand
-        return state.acType !== '' && state.units !== '' && state.brand !== '';
+        // AC Type, Units
+        return state.acType !== '' && state.units !== '';
     }
     if (step === 3) {
         // Main Issue, Duration, Cooling Condition, Urgency
@@ -526,7 +520,6 @@ Details:
 - Floor Level: ${state.floorLevel}
 - AC Type: ${state.acType}
 - Number of Units: ${state.units}
-- Brand: ${state.brand}
 - Main Issue: ${state.mainIssue}
 - Issue Duration: ${state.duration}
 - Cooling Condition: ${state.coolingCondition}
