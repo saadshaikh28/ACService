@@ -1,9 +1,247 @@
 /**
- * ROOFING CALCULATOR PRO
+ * AC SERVICE ESTIMATE
  * - GSAP Animations
  * - 3D Background (Three.js)
  * - Multi-step Logic
+ * - Arabic/English Localization
  */
+
+// --- TRANSLATIONS ---
+const translations = {
+    en: {
+        heroTitle: "AC Service Estimate",
+        subtitle: "Quick Questions, Quick Quote.",
+        section1: "Section 1 / 3",
+        pinLocation: "📍 Pin your location",
+        mapDesc: "Select your property location on the map.",
+        propertyType: "🏠 Property type",
+        apartment: "Apartment",
+        villa: "Villa",
+        office: "Office",
+        shop: "Shop / Restaurant",
+        warehouse: "Warehouse",
+        floorLevel: "🏢 Floor level",
+        groundFloor: "Ground floor",
+        nextStep: "Next Step &rarr;",
+        prevStep: "&larr; Previous Step",
+        section2: "Section 2 / 3",
+        acDetails: "❄️ AC Details",
+        acDetailsDesc: "Tell us more about your air conditioning unit.",
+        acType: "❄️ AC type",
+        splitAC: "Split AC",
+        centralAC: "Central AC",
+        windowAC: "Window AC",
+        cassette: "Cassette / Ducted",
+        notSure: "Not sure",
+        numUnits: "🔢 Number of AC units",
+        section3: "Section 3 / 3",
+        diagnosis: "⚠️ Problem Diagnosis",
+        diagnosisDesc: "What specific issues are you facing?",
+        mainIssue: "⚠️ Main issue",
+        issue1: "Not cooling",
+        issue2: "Weak cooling",
+        issue3: "Water leakage",
+        issue4: "Bad smell",
+        issue5: "Strange noise",
+        issue6: "AC not turning on",
+        issue7: "Gas refill needed",
+        issue8: "General maintenance",
+        duration: "⏱️ How long has this issue existed?",
+        today: "Today",
+        days13: "1–3 days",
+        week1plus: "1 week+",
+        longTerm: "Long-term issue",
+        coolingCond: "🌡️ Cooling condition",
+        warmAir: "Completely warm air",
+        slightCooling: "Slight cooling",
+        inconsistent: "Cooling but inconsistent",
+        urgency: "🚨 Urgency",
+        emergency: "Emergency (same day)",
+        todayTomorrow: "Today / Tomorrow",
+        thisWeek: "This week",
+        checkingPrice: "Just checking price",
+        getEstimate: "Get Estimate &rarr;",
+        editDetails: "Edit Details",
+        waBtn: "Get Estimate via WhatsApp",
+        emailBtn: "Get Estimate via Email",
+        smsBtn: "Get Estimate via SMS",
+        waMessage: "Hello {name}, I'd like to request an AC Service estimate."
+    },
+    ar: {
+        heroTitle: "تقدير خدمة المكيف",
+        subtitle: "أسئلة سريعة، اقتباس سريع.",
+        section1: "القسم ١ / ٣",
+        pinLocation: "📍 حدد موقعك",
+        mapDesc: "حدد موقع العقار على الخريطة.",
+        propertyType: "🏠 نوع العقار",
+        apartment: "شقة",
+        villa: "فيلا",
+        office: "مكتب",
+        shop: "محل / مطعم",
+        warehouse: "مستودع",
+        floorLevel: "🏢 طابق",
+        groundFloor: "الطابق الأرضي",
+        nextStep: "الخطوة التالية &larr;",
+        prevStep: "الخطوة السابقة &rarr;",
+        section2: "القسم ٢ / ٣",
+        acDetails: "❄️ تفاصيل المكيف",
+        acDetailsDesc: "أخبرنا المزيد عن وحدة التكييف الخاصة بك.",
+        acType: "❄️ نوع المكيف",
+        splitAC: "سبليت",
+        centralAC: "مركزي",
+        windowAC: "شباك",
+        cassette: "كاسيت / دكت",
+        notSure: "غير متأكد",
+        numUnits: "🔢 عدد الوحدات",
+        section3: "القسم ٣ / ٣",
+        diagnosis: "⚠️ تشخيص المشكلة",
+        diagnosisDesc: "ما هي المشاكل المحددة التي تواجهها؟",
+        mainIssue: "⚠️ المشكلة الرئيسية",
+        issue1: "لا يبرد",
+        issue2: "تبريد ضعيف",
+        issue3: "تسريب مياه",
+        issue4: "رائحة كريهة",
+        issue5: "صوت غريب",
+        issue6: "المكيف لا يعمل",
+        issue7: "يحتاج غاز",
+        issue8: "صيانة عامة",
+        duration: "⏱️ منذ متى والمشكلة موجودة؟",
+        today: "اليوم",
+        days13: "١-٣ أيام",
+        week1plus: "أسبوع+",
+        longTerm: "مشكلة طويلة الأمد",
+        coolingCond: "🌡️ حالة التبريد",
+        warmAir: "هواء حار تماماً",
+        slightCooling: "تبريد خفيف",
+        inconsistent: "يبرد لكن بشكل متقطع",
+        urgency: "🚨 الاستعجال",
+        emergency: "طارئ (نفس اليوم)",
+        todayTomorrow: "اليوم / غداً",
+        thisWeek: "هذا الأسبوع",
+        checkingPrice: "مجرد استفسار عن السعر",
+        getEstimate: "احصل على التقدير &larr;",
+        editDetails: "تعديل التفاصيل",
+        waBtn: "الحصول على التقدير عبر واتساب",
+        emailBtn: "الحصول على التقدير عبر البريد",
+        smsBtn: "الحصول على التقدير عبر الرسائل القصيرة",
+        waMessage: "مرحباً {name}، أود طلب تقدير لخدمة المكيف."
+    }
+};
+
+let currentLang = 'en';
+
+function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+    // Update buttons
+    document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+    document.getElementById('btnAr').classList.toggle('active', lang === 'ar');
+
+    updateTranslations();
+    updateUI(false);
+}
+
+function updateTranslations() {
+    const t = translations[currentLang];
+
+    // Hero
+    document.querySelector('.hero-title .line').innerText = t.heroTitle;
+    document.querySelector('.subtitle').innerText = t.subtitle;
+
+    // Badges & Headers
+    document.querySelectorAll('.step-badge').forEach((el, i) => {
+        if (i === 0) el.innerText = t.section1;
+        if (i === 1) el.innerText = t.section2;
+        if (i === 2) el.innerText = t.section3;
+    });
+
+    document.querySelector('.wizard-step[data-step="1"] h2').innerText = t.pinLocation;
+    document.querySelector('.wizard-step[data-step="1"] p').innerText = t.mapDesc;
+    document.querySelector('.wizard-step[data-step="1"] label').innerText = t.propertyType;
+
+    document.querySelector('.wizard-step[data-step="2"] h2').innerText = t.acDetails;
+    document.querySelector('.wizard-step[data-step="2"] p').innerText = t.acDetailsDesc;
+    document.querySelector('.wizard-step[data-step="2"] .form-group:nth-child(2) label').innerText = t.acType;
+
+    document.querySelector('.wizard-step[data-step="3"] h2').innerText = t.diagnosis;
+    document.querySelector('.wizard-step[data-step="3"] p').innerText = t.diagnosisDesc;
+
+    // Navigation
+    document.querySelectorAll('.next-btn').forEach(btn => {
+        if (btn.closest('[data-step="3"]')) {
+            btn.innerHTML = t.getEstimate;
+        } else {
+            btn.innerHTML = t.nextStep;
+        }
+    });
+
+    document.querySelectorAll('.prev-btn').forEach(btn => {
+        if (btn.classList.contains('btn-text')) {
+            btn.innerText = t.editDetails;
+        } else {
+            btn.innerHTML = t.prevStep;
+        }
+    });
+
+    // Options (Property Type)
+    const propOptions = document.querySelectorAll('.shape-option[data-group="propertyType"]');
+    propOptions[0].querySelector('span').innerText = t.apartment;
+    propOptions[1].querySelector('span').innerText = t.villa;
+    propOptions[2].querySelector('span').innerText = t.office;
+    propOptions[3].querySelector('span').innerText = t.shop;
+    propOptions[4].querySelector('span').innerText = t.warehouse;
+
+    // Options (AC Type)
+    const acOptions = document.querySelectorAll('.shape-option[data-group="acType"]');
+    acOptions[0].querySelector('span').innerText = t.splitAC;
+    acOptions[1].querySelector('span').innerText = t.centralAC;
+    acOptions[2].querySelector('span').innerText = t.windowAC;
+    acOptions[3].querySelector('span').innerText = t.cassette;
+    acOptions[4].querySelector('span').innerText = t.notSure;
+
+    // Options (Main Issue)
+    const issueOptions = document.querySelectorAll('.shape-option[data-group="mainIssue"]');
+    issueOptions[0].querySelector('span').innerText = t.issue1;
+    issueOptions[1].querySelector('span').innerText = t.issue2;
+    issueOptions[2].querySelector('span').innerText = t.issue3;
+    issueOptions[3].querySelector('span').innerText = t.issue4;
+    issueOptions[4].querySelector('span').innerText = t.issue5;
+    issueOptions[5].querySelector('span').innerText = t.issue6;
+    issueOptions[6].querySelector('span').innerText = t.issue7;
+    issueOptions[7].querySelector('span').innerText = t.issue8;
+
+    // Options (Cooling Condition)
+    const condOptions = document.querySelectorAll('.shape-option[data-group="coolingCondition"]');
+    condOptions[0].querySelector('span').innerText = t.warmAir;
+    condOptions[1].querySelector('span').innerText = t.slightCooling;
+    condOptions[2].querySelector('span').innerText = t.inconsistent;
+
+    // Options (Urgency)
+    const urgencyOptions = document.querySelectorAll('.shape-option[data-group="urgency"]');
+    urgencyOptions[0].querySelector('span').innerText = t.emergency;
+    urgencyOptions[1].querySelector('span').innerText = t.todayTomorrow;
+    urgencyOptions[2].querySelector('span').innerText = t.thisWeek;
+    urgencyOptions[3].querySelector('span').innerText = t.checkingPrice;
+
+    // Sliders
+    document.querySelector('.wizard-step[data-step="1"] .form-group:nth-child(4) label').innerText = t.floorLevel;
+    document.querySelector('.wizard-step[data-step="2"] .form-group:nth-child(3) label').innerText = t.numUnits;
+    document.querySelector('.wizard-step[data-step="3"] .form-group:nth-child(3) label').innerText = t.duration;
+    document.querySelector('.wizard-step[data-step="3"] .form-group:nth-child(4) label').innerText = t.coolingCond;
+    document.querySelector('.wizard-step[data-step="3"] .form-group:nth-child(5) label').innerText = t.urgency;
+
+    // Buttons (Final)
+    document.getElementById('waBtn').innerHTML = `<span class="icon">💬</span> ${t.waBtn}`;
+    document.getElementById('emailBtn').innerHTML = `<span class="icon">✉️</span> ${t.emailBtn}`;
+    document.getElementById('smsBtn').innerHTML = `<span class="icon">📱</span> ${t.smsBtn}`;
+
+    // Update current values
+    if (floorSlider) floorSlider.dispatchEvent(new Event('input'));
+    if (unitsSlider) unitsSlider.dispatchEvent(new Event('input'));
+    if (durationSlider) durationSlider.dispatchEvent(new Event('input'));
+}
 
 // --- CONFIGURATION ---
 
@@ -332,14 +570,17 @@ function initEventListeners() {
     // Floor Slider
     const floorSlider = document.getElementById('floorSlider');
     const floorDisplay = document.getElementById('floorDisplay');
-    const floorLabels = ["Ground floor", "1–5", "6–10", "10+"];
+    const floorLabels = {
+        en: ["Ground floor", "1–5", "6–10", "10+"],
+        ar: ["الطابق الأرضي", "١-٥", "٦-١٠", "١٠+"]
+    };
 
     if (floorSlider) {
         floorSlider.classList.add('glitter-slider');
         updateSliderFill(floorSlider);
         floorSlider.addEventListener('input', (e) => {
             const val = parseInt(e.target.value);
-            const label = floorLabels[val];
+            const label = floorLabels[currentLang][val];
             state.floorLevel = label;
             floorDisplay.innerText = label;
             updateSliderFill(e.target);
@@ -357,7 +598,11 @@ function initEventListeners() {
         unitsSlider.addEventListener('input', (e) => {
             const val = parseInt(e.target.value);
             const label = unitsLabels[val];
-            state.units = val === 0 ? "1 unit" : `${label} units`;
+            if (currentLang === 'ar') {
+                state.units = val === 0 ? "وحدة واحدة" : `${label} وحدات`;
+            } else {
+                state.units = val === 0 ? "1 unit" : `${label} units`;
+            }
             unitsDisplay.innerText = state.units;
             updateSliderFill(e.target);
         });
@@ -369,14 +614,17 @@ function initEventListeners() {
     // Duration Slider
     const durationSlider = document.getElementById('durationSlider');
     const durationDisplay = document.getElementById('durationDisplay');
-    const durationLabels = ["Today", "1–3 days", "1 week+", "Long-term issue"];
+    const durationList = {
+        en: ["Today", "1–3 days", "1 week+", "Long-term issue"],
+        ar: ["اليوم", "١-٣ أيام", "أسبوع+", "مشكلة طويلة الأمد"]
+    };
 
     if (durationSlider) {
         durationSlider.classList.add('glitter-slider');
         updateSliderFill(durationSlider);
         durationSlider.addEventListener('input', (e) => {
             const val = parseInt(e.target.value);
-            const label = durationLabels[val];
+            const label = durationList[currentLang][val];
             state.duration = label;
             durationDisplay.innerText = label;
             updateSliderFill(e.target);
@@ -512,9 +760,23 @@ function calculateFinal() {
 }
 
 function prepareContactLinks() {
-    const message = `Hello ${rooferConfig.name}, I'd like to request an AC Service estimate.
-    
-Details:
+    const t = translations[currentLang];
+    const intro = t.waMessage.replace('{name}', rooferConfig.name);
+
+    let details = "";
+    if (currentLang === 'ar') {
+        details = `التفاصيل:
+- الموقع: ${state.location ? `https://www.google.com/maps?q=${state.location.lat},${state.location.lng}` : 'غير محدد'}
+- نوع العقار: ${state.propertyType}
+- الطابق: ${state.floorLevel}
+- نوع المكيف: ${state.acType}
+- عدد الوحدات: ${state.units}
+- المشكلة الأساسية: ${state.mainIssue}
+- منذ متى: ${state.duration}
+- حالة التبريد: ${state.coolingCondition}
+- الاستعجال: ${state.urgency}`;
+    } else {
+        details = `Details:
 - Location: ${state.location ? `https://www.google.com/maps?q=${state.location.lat},${state.location.lng}` : 'Not pinned'}
 - Property Type: ${state.propertyType}
 - Floor Level: ${state.floorLevel}
@@ -523,9 +785,14 @@ Details:
 - Main Issue: ${state.mainIssue}
 - Issue Duration: ${state.duration}
 - Cooling Condition: ${state.coolingCondition}
-- Urgency: ${state.urgency}
+- Urgency: ${state.urgency}`;
+    }
 
-Please contact me to discuss next steps.`;
+    const message = `${intro}
+    
+${details}
+
+${currentLang === 'ar' ? 'يرجى الاتصال بي لمناقشة الخطوات التالية.' : 'Please contact me to discuss next steps.'}`;
 
     const encoded = encodeURIComponent(message);
     const waBtn = document.getElementById('waBtn');
