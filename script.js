@@ -98,8 +98,8 @@ function loadRooferConfig() {
                 if (twitterTitle) twitterTitle.setAttribute('content', fullTitle);
 
                 heroTitle.innerHTML = `
-                    <span class="line">AC Service Estimate</span>
-                    <span class="line brand-line">by <span class="company-brand">${rooferConfig.companyName}</span></span>
+                    <span class="line brand-line"><span class="company-brand">${rooferConfig.companyName}</span></span>
+                    <span class="line service-line">AC Service Estimate</span>
                 `;
             } else {
                 const defaultTitle = "AC Service Estimate";

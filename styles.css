@@ -122,10 +122,17 @@ h3 {
 }
 
 .brand-line {
-    font-size: 0.5em;
+    font-size: 1.1em;
+    margin-bottom: 0.2rem;
+    font-weight: 900;
+}
+
+.service-line {
+    font-size: 0.45em;
     color: var(--text-muted);
-    margin-top: 0.5rem;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
 }
 
 .company-brand {
@@ -177,7 +184,7 @@ h3 {
 
 @media (min-width: 768px) {
     .hero-title {
-        font-size: 4rem;
+        font-size: 5rem;
     }
 
     .hero .subtitle {
